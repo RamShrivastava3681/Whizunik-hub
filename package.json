@@ -1,0 +1,28 @@
+{
+  "name": "whizunik-portal",
+  "version": "1.0.0",
+  "description": "WhizUnik Portal - Full Stack Application",
+  "scripts": {
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && npm install",
+    "install:all": "npm run install:frontend && npm run install:backend",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:frontend": "cd frontend && npm run build",
+    "build:frontend:prod": "cd frontend && npm run build -- --mode production",
+    "start:backend": "cd backend && npm start",
+    "start:backend:prod": "cd backend && npm run start:prod",
+    "start:backend:whizunikhub": "cd backend && npm run start:whizunikhub",
+    "start:prod": "npm run build:frontend:prod && npm run start:backend:prod",
+    "start:whizunikhub": "npm run build:frontend:prod && npm run start:backend:whizunikhub",
+    "clean": "rimraf frontend/node_modules backend/node_modules frontend/dist backend/dist"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "rimraf": "^6.0.1"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
