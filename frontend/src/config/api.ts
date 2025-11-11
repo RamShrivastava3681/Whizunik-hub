@@ -2,7 +2,7 @@
 const getApiUrl = () => {
   // Check if we're running on whizunikhub.com
   if (typeof window !== 'undefined' && window.location.hostname === 'whizunikhub.com') {
-    return 'https://whizunikhub.com:5000';
+    return 'https://whizunikhub.com:5003';
   }
   
   // Check for environment variable (remove /api if present since we'll add it below)
@@ -12,7 +12,7 @@ const getApiUrl = () => {
   }
   
   // Default to localhost
-  return 'http://localhost:5000';
+  return 'http://localhost:5003';
 };
 
 export const API_CONFIG = {

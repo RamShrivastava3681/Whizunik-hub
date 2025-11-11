@@ -31,7 +31,7 @@ npm install
 Copy `.env.example` to `.env` and configure:
 
 ```bash
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5003/api
 ```
 
 ### Running Development Server
@@ -78,7 +78,7 @@ src/
 
 ## API Integration
 
-The frontend communicates with the backend API at `http://localhost:5000/api`. Key endpoints:
+The frontend communicates with the backend API at `http://localhost:5003/api`. Key endpoints:
 
 - `/auth/*` - Authentication endpoints
 - `/admin/*` - Admin management endpoints
