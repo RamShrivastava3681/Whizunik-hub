@@ -24,8 +24,8 @@ CORS_ORIGIN=http://localhost:5173, https://hotpink-gull-817583.hostingersite.com
 
 ### 3. Frontend API Configuration
 The frontend now dynamically detects the domain and uses the appropriate API URL:
-- When running on `whizunikhub.com`, it uses `https://whizunikhub.com:5000`
-- In development, it uses `http://localhost:5000`
+- When running on `whizunikhub.com`, it uses `https://whizunikhub.com:5003`
+- In development, it uses `http://localhost:5003`
 - Can be overridden with `VITE_API_URL` environment variable
 
 ### 4. Email Notifications
@@ -55,8 +55,8 @@ npm run build -- --mode production
 
 ## Server Requirements
 
-1. **Backend Server**: Needs to be accessible on port 5000
-   - URL: `https://whizunikhub.com:5000` or `http://whizunikhub.com:5000`
+1. **Backend Server**: Needs to be accessible on port 5003
+   - URL: `https://whizunikhub.com:5003` or `http://whizunikhub.com:5003`
 
 2. **Frontend**: Can be served on standard web ports (80/443)
    - URL: `https://whizunikhub.com` or `http://whizunikhub.com`

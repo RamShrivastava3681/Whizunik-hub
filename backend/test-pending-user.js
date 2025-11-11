@@ -2,7 +2,11 @@ const fetch = require('node-fetch').default || require('node-fetch');
 
 async function createPendingUser() {
   try {
-    const response = await fetch('http://localhost:5000/api/auth/register', {
+    const testUserRegistration = async () => {
+    try {
+        console.log('🧪 Testing user registration endpoint...');
+        
+        const response = await fetch('http://localhost:5003/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

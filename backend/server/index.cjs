@@ -13,7 +13,7 @@ const puppeteer = require('puppeteer');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 5003;
 
 // MongoDB Connection
 const connectDB = async () => {

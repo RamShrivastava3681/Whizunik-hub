@@ -33,7 +33,7 @@ Create `.env` file with the following variables:
 
 ```bash
 # Server Configuration
-PORT=5000
+PORT=5003
 NODE_ENV=development
 
 # Database
@@ -63,7 +63,7 @@ FRONTEND_URL=http://localhost:5173
 npm run dev
 ```
 
-The API will be available at `http://localhost:5000`
+The API will be available at `http://localhost:5003`
 
 ### Running Production Server
 

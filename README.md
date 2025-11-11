@@ -90,7 +90,7 @@ ADMIN_EMAIL=admin@whizunik.com
 
 **Frontend (.env)**:
 ```bash
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5003/api
 ```
 
 ### 4. Start Development
@@ -99,7 +99,7 @@ npm run dev
 ```
 
 This will start:
-- Backend API on `http://localhost:5000`
+- Backend API on `http://localhost:5003`
 - Frontend on `http://localhost:5173`
 
 ## 📜 Available Scripts
@@ -151,7 +151,7 @@ cd backend && npm start
 ## 📡 API Documentation
 
 ### Base URL
-- Development: `http://localhost:5000/api`
+- Development: `http://localhost:5003/api`
 - Production: Update `VITE_API_URL` in frontend
 
 ### Key Endpoints
