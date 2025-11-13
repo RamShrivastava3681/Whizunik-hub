@@ -1,8 +1,10 @@
 // API Configuration
 const getApiUrl = () => {
-  // Check if we're running on whizunikhub.com
-  if (typeof window !== 'undefined' && window.location.hostname === 'whizunikhub.com') {
-    return 'https://whizunikhub.com:5003';
+  // Check if we're running on whizunikhub.com or portal.whizunikhub.com
+  if (typeof window !== 'undefined' && 
+      (window.location.hostname === 'whizunikhub.com' || 
+       window.location.hostname === 'portal.whizunikhub.com')) {
+    return 'https://portal.whizunikhub.com';
   }
   
   // Check for environment variable (remove /api if present since we'll add it below)
@@ -11,7 +13,7 @@ const getApiUrl = () => {
     return url.replace('/api', '');
   }
   
-  // Default to localhost
+  // Default to localhost for development
   return 'http://localhost:5003';
 };
 

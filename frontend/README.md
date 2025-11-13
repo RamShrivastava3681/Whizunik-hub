@@ -78,7 +78,11 @@ src/
 
 ## API Integration
 
-The frontend communicates with the backend API at `http://localhost:5003/api`. Key endpoints:
+The frontend communicates with the backend API:
+- Development: `http://localhost:5003/api`
+- Production: `https://portal.whizunikhub.com/api`
+
+Key endpoints:
 
 - `/auth/*` - Authentication endpoints
 - `/admin/*` - Admin management endpoints
