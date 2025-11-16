@@ -14,11 +14,12 @@ axios.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
     console.log('🔗 Axios Request (With Auth):', config.method?.toUpperCase(), config.url);
-    console.log('🔗 Full URL:', config.baseURL + config.url);
   } else {
     console.log('🔗 Axios Request (No Auth):', config.method?.toUpperCase(), config.url);
-    console.log('🔗 Full URL:', config.baseURL + config.url);
   }
+  console.log('🔗 Full URL:', (config.baseURL || '') + (config.url || ''));
+  console.log('🔗 Base URL:', config.baseURL);
+  console.log('🔗 Request URL:', config.url);
   return config;
 });
 

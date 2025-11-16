@@ -1,25 +1,41 @@
 // API Configuration
 const getApiUrl = () => {
-  // Check if we're running on whizunikhub.com or portal.whizunikhub.com
-  if (typeof window !== 'undefined' && 
-      (window.location.hostname === 'whizunikhub.com' || 
-       window.location.hostname === 'portal.whizunikhub.com')) {
-    return 'https://portal.whizunikhub.com';
-  }
-  
-  // Check for environment variable (remove /api if present since we'll add it below)
+  // First check for environment variable
   if (import.meta.env.VITE_API_URL) {
     const url = import.meta.env.VITE_API_URL;
-    return url.replace('/api', '');
+    const baseUrl = url.replace('/api', '');
+    console.log('🔧 API Config: Using environment URL:', baseUrl);
+    return baseUrl;
+  }
+  
+  // Check if we're running on whizunikhub.com or portal.whizunikhub.com
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    console.log('🔧 API Config: Current hostname:', hostname);
+    
+    if (hostname === 'whizunikhub.com' || hostname === 'portal.whizunikhub.com') {
+      console.log('🔧 API Config: Using production domain:', 'https://portal.whizunikhub.com');
+      return 'https://portal.whizunikhub.com';
+    }
   }
   
   // Default to localhost for development
+  console.log('🔧 API Config: Using localhost development server');
   return 'http://localhost:5003';
 };
 
+// Initialize API configuration
+const apiUrl = getApiUrl();
+const baseUrl = `${apiUrl}/api`;
+
+console.log('🔧 API Config initialized:');
+console.log('  - Server URL:', apiUrl);
+console.log('  - Base API URL:', baseUrl);
+console.log('  - Environment:', import.meta.env.MODE);
+
 export const API_CONFIG = {
-  BASE_URL: `${getApiUrl()}/api`,
-  SERVER_URL: getApiUrl(),
+  BASE_URL: baseUrl,
+  SERVER_URL: apiUrl,
   TIMEOUT: 10000,
 };
 

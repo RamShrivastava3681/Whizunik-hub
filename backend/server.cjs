@@ -224,7 +224,7 @@ const generateApprovalNotificationEmail = (username) => ({
       <p>Hello ${username},</p>
       <p>Great news! Your WhizUnik Portal account has been approved by our administrators.</p>
       <p>You can now log in to your account and start using the platform.</p>
-      <p><a href="https://whizunikhub.com/login" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Login Now</a></p>
+      <p><a href="https://portal.whizunikhub.com/login" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Login Now</a></p>
       <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
       <p style="color: #6b7280; font-size: 14px;">WhizUnik Portal Team</p>
     </div>
@@ -236,8 +236,8 @@ const allowedOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
   : ['http://localhost:5173'];
 
-// Always include whizunikhub.com domains
-allowedOrigins.push('https://whizunikhub.com', 'http://whizunikhub.com');
+// Always include whizunikhub.com and portal.whizunikhub.com domains
+allowedOrigins.push('https://whizunikhub.com', 'http://whizunikhub.com', 'https://portal.whizunikhub.com', 'http://portal.whizunikhub.com');
 
 app.use(cors({
   origin: allowedOrigins,

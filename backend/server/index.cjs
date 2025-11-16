@@ -13,7 +13,7 @@ const puppeteer = require('puppeteer');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5003;
+const PORT = process.env.PORT || 80;
 
 // MongoDB Connection
 const connectDB = async () => {
@@ -160,17 +160,42 @@ const evaluationSchema = new mongoose.Schema({
 
 const Evaluation = mongoose.model('Evaluation', evaluationSchema);
 
-// Middleware
-const allowedOrigins = process.env.CORS_ORIGIN 
+// Middleware - CORS Configuration
+let allowedOrigins = process.env.CORS_ORIGIN 
   ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
   : ['http://localhost:5173'];
 
-// Always include whizunikhub.com domains
-allowedOrigins.push('https://whizunikhub.com', 'http://whizunikhub.com');
+// Always include whizunikhub.com and portal.whizunikhub.com domains
+const productionOrigins = [
+  'https://whizunikhub.com', 
+  'http://whizunikhub.com', 
+  'https://portal.whizunikhub.com', 
+  'http://portal.whizunikhub.com',
+  'https://www.whizunikhub.com',
+  'http://www.portal.whizunikhub.com'
+];
+
+allowedOrigins = [...new Set([...allowedOrigins, ...productionOrigins])];
+
+console.log('🌐 CORS Configuration:');
+console.log('  - Allowed Origins:', allowedOrigins);
 
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      console.log('✅ CORS: Origin allowed:', origin);
+      return callback(null, true);
+    } else {
+      console.log('❌ CORS: Origin rejected:', origin);
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 app.use(express.json({ limit: '50mb' }));
@@ -207,9 +232,29 @@ const authenticateToken = (req, res, next) => {
 app.get('/health', (req, res) => {
   res.json({
     success: true,
-    message: 'FinLink Hub API is running',
+    message: 'WhizUnik Hub API is running',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    port: PORT,
+    cors: allowedOrigins
+  });
+});
+
+// API Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({
+    success: true,
+    message: 'WhizUnik Hub API /api endpoint is working',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    port: PORT,
+    cors_origins: allowedOrigins,
+    endpoints: {
+      health: '/health',
+      api_health: '/api/health',
+      auth_login: '/api/auth/login',
+      applications: '/api/applications'
+    }
   });
 });
 
@@ -1597,11 +1642,13 @@ const startServer = async () => {
   try {
     await connectDB();
     
-    app.listen(PORT, () => {
-      console.log(`🚀 FinLink Hub API server running on port ${PORT}`);
-      console.log(`📍 API URL: http://localhost:${PORT}`);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`🚀 WhizUnik Hub API server running on port ${PORT}`);
+      console.log(`📍 Local API URL: http://localhost:${PORT}`);
+      console.log(`🌐 Production API URL: https://portal.whizunikhub.com`);
       console.log(`🌐 Frontend URL: ${process.env.CORS_ORIGIN || 'http://localhost:5173'}`);
       console.log(`📁 Upload directory: ${path.resolve('./uploads')}`);
+      console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

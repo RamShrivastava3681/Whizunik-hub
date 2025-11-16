@@ -6,8 +6,10 @@ The backend has been configured to accept requests from `whizunikhub.com` domain
 
 ### 1. CORS Configuration
 Both backend servers now accept requests from:
+- `https://portal.whizunikhub.com` (main frontend)
 - `https://whizunikhub.com`
 - `http://whizunikhub.com`
+- `http://portal.whizunikhub.com`
 - `http://localhost:5173` (for development)
 - Any domains specified in the `CORS_ORIGIN` environment variable
 
@@ -15,7 +17,7 @@ Both backend servers now accept requests from:
 
 #### Backend `.env` file updated:
 ```properties
-CORS_ORIGIN=http://localhost:5173, https://hotpink-gull-817583.hostingersite.com/, https://whizunikhub.com, http://whizunikhub.com
+CORS_ORIGIN=http://localhost:5173, https://hotpink-gull-817583.hostingersite.com/, https://whizunikhub.com, http://whizunikhub.com, https://portal.whizunikhub.com, http://portal.whizunikhub.com
 ```
 
 #### New production environment files created:
@@ -24,8 +26,8 @@ CORS_ORIGIN=http://localhost:5173, https://hotpink-gull-817583.hostingersite.com
 
 ### 3. Frontend API Configuration
 The frontend now dynamically detects the domain and uses the appropriate API URL:
-- When running on `whizunikhub.com`, it uses `https://whizunikhub.com:5003`
-- In development, it uses `http://localhost:5003`
+- When running on `whizunikhub.com` or `portal.whizunikhub.com`, it uses `https://portal.whizunikhub.com/api`
+- In development, it uses `http://localhost:5003/api`
 - Can be overridden with `VITE_API_URL` environment variable
 
 ### 4. Email Notifications
@@ -59,7 +61,8 @@ npm run build -- --mode production
    - URL: `https://whizunikhub.com:5003` or `http://whizunikhub.com:5003`
 
 2. **Frontend**: Can be served on standard web ports (80/443)
-   - URL: `https://whizunikhub.com` or `http://whizunikhub.com`
+   - Main URL: `https://portal.whizunikhub.com`
+   - Alternative: `https://whizunikhub.com` or `http://whizunikhub.com`
 
 ## SSL Configuration
 

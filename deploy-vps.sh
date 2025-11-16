@@ -80,11 +80,11 @@ module.exports = {
   apps: [
     {
       name: 'whizunik-backend',
-      script: 'server.cjs',
+      script: 'server/index.cjs',
       cwd: '/var/www/Whizunik-hub/backend',
       env_production: {
         NODE_ENV: 'production',
-        PORT: 5000
+        PORT: 80
       },
       instances: 1,
       exec_mode: 'fork',
@@ -93,7 +93,10 @@ module.exports = {
       error_file: '/var/log/pm2/whizunik-error.log',
       out_file: '/var/log/pm2/whizunik-out.log',
       log_file: '/var/log/pm2/whizunik-combined.log',
-      time: true
+      time: true,
+      restart_delay: 1000,
+      max_restarts: 10,
+      min_uptime: '10s'
     }
   ]
 };
@@ -116,8 +119,8 @@ JWT_SECRET=5878b1b35bcdd625a002b10c55a40a2c4fffb641efe96b98fda59c5694618d9767fb8
 JWT_REFRESH_SECRET=4f2b17cf4a3fe5bc0f733f0a82816faeb37090dfbb62d1916e2da84a92bded31736e2d42f0981fc04716dfc6c5757be851506d9611c7efdd009204a178f4ef84
 
 # Server Configuration
-PORT=5000
-CORS_ORIGIN=https://whizunikhub.com,http://whizunikhub.com
+PORT=80
+CORS_ORIGIN=https://whizunikhub.com,http://whizunikhub.com,https://portal.whizunikhub.com,http://portal.whizunikhub.com,https://www.whizunikhub.com,http://www.portal.whizunikhub.com
 
 # Upload Configuration
 UPLOAD_PATH=./uploads
@@ -146,15 +149,20 @@ print_warning "Please edit .env.production file and update your credentials befo
 
 # Create Nginx configuration
 print_status "Creating Nginx configuration..."
-sudo tee /etc/nginx/sites-available/whizunik-backend > /dev/null << 'EOF'
+sudo tee /etc/nginx/sites-available/whizunik-portal > /dev/null << 'EOF'
 server {
     listen 80;
-    server_name _;
+    server_name portal.whizunikhub.com;
     client_max_body_size 50M;
+    
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
 
-    # API endpoints
+    # API endpoints - Direct proxy to backend on port 80
     location /api/ {
-        proxy_pass http://localhost:5000;
+        proxy_pass http://localhost:80;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -177,7 +185,7 @@ server {
 
     # Health check endpoint
     location /health {
-        proxy_pass http://localhost:5000;
+        proxy_pass http://localhost:80;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -185,9 +193,9 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # Direct backend access
+    # All other requests - proxy to backend
     location / {
-        proxy_pass http://localhost:5000;
+        proxy_pass http://localhost:80;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -198,10 +206,20 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 }
+
+# Redirect www to non-www
+server {
+    listen 80;
+    server_name www.portal.whizunikhub.com;
+    return 301 http://portal.whizunikhub.com$request_uri;
+}
 EOF
 
 # Enable Nginx site
-sudo ln -sf /etc/nginx/sites-available/whizunik-backend /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/whizunik-portal /etc/nginx/sites-enabled/
+
+# Remove old config if exists
+sudo rm -f /etc/nginx/sites-enabled/whizunik-backend
 
 # Remove default Nginx site if it exists
 sudo rm -f /etc/nginx/sites-enabled/default

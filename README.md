@@ -90,7 +90,11 @@ ADMIN_EMAIL=admin@whizunik.com
 
 **Frontend (.env)**:
 ```bash
+# Development
 VITE_API_URL=http://localhost:5003/api
+
+# Production
+VITE_API_URL=https://portal.whizunikhub.com/api
 ```
 
 ### 4. Start Development
@@ -152,6 +156,7 @@ cd backend && npm start
 
 ### Base URL
 - Development: `http://localhost:5003/api`
+- Production: `https://portal.whizunikhub.com/api`
 - Production: Update `VITE_API_URL` in frontend
 
 ### Key Endpoints
